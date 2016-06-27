@@ -8,10 +8,12 @@ Proof-of-Concept PCAP reader using libprotoident Deep Packet Inspection library
 
 #### Output
 ```
-Analyzing pcap /home/lorenzo/Downloads/testcapture_voip.pcap
+libprotoident Reader 0.1 
+Reading packets from ./path/to/file.pcap ...   [CTRL-C to stop]
 
-Statistics:
-===========
+DPI Statistics:
+================
+
 	TOTAL FLOWS: 		12
 	TOTAL BYTES: 		160338
 	TOTAL PACKETS: 		907
@@ -19,8 +21,6 @@ Statistics:
 	DPI THROUGHPUT: 	907.08 K pps / 1.16 Gb/sec
 	TOTAL TIME: 		0.001 sec
 
-	Detected Protocols:
-	---------
 	Detected Protocols:
 	---------
 	RTP                 PKTS: 836       BYTES: 143652    
