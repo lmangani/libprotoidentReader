@@ -343,7 +343,7 @@ int main(int argc, char *argv[])
 
   printf("\nlibprotoident Reader 0.1 \n");
 
-  while ((opt = getopt(argc, argv, "i:s:")) != -1) {
+  while ((opt = getopt(argc, argv, "i:s:h")) != -1) {
      switch(opt) {
       case 'i':
 	      in_fname = optarg;
@@ -371,10 +371,12 @@ int main(int argc, char *argv[])
       	      break;
       case 'h':
 		/* print help */
-	      printf("libprotoident Reader \n");
 	      printf("-----------------------\n\n");
-	      printf("\t -i: \tInput PCAP file \n");
-	      printf("\t -h: \tThis help text \n");
+	      printf("\t -i: \tfilename\tInput PCAP file \n");
+	      printf("\t -s: \tinteger \tLimit packets \n");
+	      printf("\t -h: \t	\tThis help text \n");
+	      printf("\n\n");
+	      return -1;
 	      break;
 
     }
@@ -437,7 +439,7 @@ int main(int argc, char *argv[])
     goto error;
   }
 
-  while (trace_read_packet(trace, packet) > 0) {
+  while (trace_read_packet(trace, packet) > 0 && total_packets < limit) {
     process_packet(packet);
   }
 
