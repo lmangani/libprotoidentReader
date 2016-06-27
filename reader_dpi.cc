@@ -15,6 +15,15 @@
 #include <libprotoident.h>
 #include <libtrace.h>
 
+#include <signal.h>
+
+volatile sig_atomic_t stop;
+void inthand(int signum)
+{
+    stop = 1;
+}
+
+
 static int total_flows = 0;
 static uint64_t total_packets = 0;
 static uint64_t total_bytes = 0;
@@ -336,18 +345,17 @@ int main(int argc, char *argv[])
   int result = -1;
   char pcap;
 
+  signal(SIGINT, inthand);
+
   /* options */
   int opt = 0;
   int limit;
   char *in_fname = NULL;
 
-  printf("\nlibprotoident Reader 0.1 \n");
-
   while ((opt = getopt(argc, argv, "i:s:h")) != -1) {
      switch(opt) {
       case 'i':
 	      in_fname = optarg;
-	      printf("Reading packets from %s", in_fname);
 	      break;
       case 's':
 	      limit = atoi(optarg);
@@ -382,6 +390,8 @@ int main(int argc, char *argv[])
     }
   }
 
+  printf("\nlibprotoident Reader 0.1 \n");
+  printf("Reading packets from %s ... \t[CTRL-C to stop]\n", in_fname);
 
   if( ! in_fname ) {
       printf("No filename supplied.\n");
@@ -439,8 +449,9 @@ int main(int argc, char *argv[])
     goto error;
   }
 
-  while (trace_read_packet(trace, packet) > 0 && total_packets < limit) {
+  while (trace_read_packet(trace, packet) > 0 && total_packets < limit ) {
     process_packet(packet);
+	if (stop) break;
   }
 
   // Print statistics
