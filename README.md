@@ -21,9 +21,11 @@ Statistics:
 
 	Detected Protocols:
 	---------
-	    * RTP 	PKTS: 836 	BYTES: 143652 
-	    * SIP_UDP 	PKTS: 38 	BYTES: 16342 
-	    * STUN 	PKTS: 9 	BYTES: 344 
+	Detected Protocols:
+	---------
+	RTP                 PKTS: 836       BYTES: 143652    
+	SIP_UDP             PKTS: 38        BYTES: 16342     
+	STUN                PKTS: 9         BYTES: 344     
 
 ```
 
