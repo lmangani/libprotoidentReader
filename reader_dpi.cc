@@ -133,10 +133,19 @@ void display_ident(Flow *f, IdentFlow *ident)
 	f->id.get_server_ip_str(s_ip);
 	f->id.get_client_ip_str(c_ip);
 
+	printf("%s %s %s %u %u %u %.3f %" PRIu64 " %" PRIu64 "",
+			proto->name, s_ip, c_ip,
+                        f->id.get_server_port(), f->id.get_client_port(),
+                        f->id.get_protocol(), ident->start_ts,
+			ident->out.bytes, ident->in.bytes);
+
+
 	/* basic statistics */
+	/*
 	printf("%s,%d,%" PRIu64 ",%" PRIu64 ",%" PRIu64 ",%" PRIu64,
 		proto->name, f->id.get_protocol(),
 		ident->out.pkts, ident->out.bytes, ident->in.pkts, ident->in.bytes);
+	*/
 
 	/* print packet length statistics */
 	is = &ident->out;
@@ -189,6 +198,7 @@ void expire_ident_flows(double ts, bool exp_flag)
 
 		IdentFlow *ident = (IdentFlow *)expired->extension;
 
+		// display_ident(expired, ident);
 		/* Don't forget to free our custom data structure */
 		free(ident);
 
@@ -455,7 +465,7 @@ int main(int argc, char *argv[])
   }
 
   // Print statistics
-  printf("\n\nDPI Statistics:\n");
+  printf("\nDPI Statistics:\n");
   printf("================\n\n");
   printf("\tTOTAL FLOWS: \t\t%d\n", total_flows);
   printf("\tTOTAL BYTES: \t\t%" PRIu64 "\n", total_bytes);
@@ -482,7 +492,8 @@ int main(int argc, char *argv[])
     lpi_module_t *p = (lpi_module_t*) jit->first;
 	    printf( "\t%-20s", p->name);
 	    printf( "PKTS: %-10d", jit->second.first);
-	    printf( "BYTES: %-10d\n", jit->second.second);
+	    // printf( "AVG: %-10s ", formatTraffic(jit->second.second/jit->second.first, 1, xbuf1));
+	    printf( "TOTAL: %-10s\n", formatTraffic(jit->second.second, 1, xbuf1));
   }
 
   printf("\n\r");
