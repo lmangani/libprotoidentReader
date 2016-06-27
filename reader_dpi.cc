@@ -7,13 +7,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
+#include <unistd.h>
 #include <time.h>
 #include <map>
 
 #include <libflowmanager.h>
 #include <libprotoident.h>
 #include <libtrace.h>
-
 
 static int total_flows = 0;
 static uint64_t total_packets = 0;
@@ -336,13 +336,56 @@ int main(int argc, char *argv[])
   int result = -1;
   char pcap;
 
-  if( argc == 2 ) {
-      printf("Analyzing pcap %s\n", argv[1]);
-   }
-   else {
+  /* options */
+  int opt = 0;
+  int limit;
+  char *in_fname = NULL;
+
+  printf("\nlibprotoident Reader 0.1 \n");
+
+  while ((opt = getopt(argc, argv, "i:s:")) != -1) {
+     switch(opt) {
+      case 'i':
+	      in_fname = optarg;
+	      printf("Reading packets from %s", in_fname);
+	      break;
+      case 's':
+	      limit = atoi(optarg);
+	      break;
+      case '?':
+	      /* Case when user enters the command as
+	       * $ ./cmd_exe -i
+	       */
+	      if (optopt == 'i') {
+	      	printf("\nMissing mandatory input option");
+	      	return -1;
+
+	      /* Case when user enters the command as
+	       * # ./cmd_exe -o
+	       */
+	      } else if (optopt == 'o') {
+	       	printf("\nMissing mandatory output option");
+	      } else {
+	       	printf("\nInvalid option received");
+	      }
+      	      break;
+      case 'h':
+		/* print help */
+	      printf("libprotoident Reader \n");
+	      printf("-----------------------\n\n");
+	      printf("\t -i: \tInput PCAP file \n");
+	      printf("\t -h: \tThis help text \n");
+	      break;
+
+    }
+  }
+
+
+  if( ! in_fname ) {
       printf("No filename supplied.\n");
 	return -1;
-   }
+  }
+
 
   if (lpi_init_library() < 0) {
     printf("Failed to initialize libprotoident\n");
@@ -376,8 +419,8 @@ int main(int argc, char *argv[])
     goto error;
   }
 
-  //trace = trace_create(TRACE_FILE);
-  trace = trace_create(argv[1]);
+  // trace = trace_create(argv[1]);
+  trace = trace_create(in_fname);
   if (!trace) {
     printf("Creating libtrace trace\n");
     goto error;
@@ -399,7 +442,7 @@ int main(int argc, char *argv[])
   }
 
   // Print statistics
-  printf("\nDPI Statistics:\n");
+  printf("\n\nDPI Statistics:\n");
   printf("================\n\n");
   printf("\tTOTAL FLOWS: \t\t%d\n", total_flows);
   printf("\tTOTAL BYTES: \t\t%" PRIu64 "\n", total_bytes);
