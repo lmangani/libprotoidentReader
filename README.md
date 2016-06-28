@@ -1,6 +1,12 @@
 # libprotoident Reader
 Proof-of-Concept PCAP reader using libprotoident Deep Packet Inspection library
 
+
+## Compile
+```
+./build.sh
+```
+
 ## Usage: PCAP file
 ```
 ./reader_dpi -i ./path/to/file.pcap
