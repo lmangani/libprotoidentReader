@@ -17,6 +17,8 @@
 
 #include <signal.h>
 
+#define TRACE_DIR_UNKNOWN TRACE_DIR_OUTGOING;
+
 volatile sig_atomic_t stop;
 void inthand(int signum)
 {
