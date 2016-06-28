@@ -459,7 +459,7 @@ int main(int argc, char *argv[])
     goto error;
   }
 
-  while (trace_read_packet(trace, packet) > 0 && total_packets < limit ) {
+  while (trace_read_packet(trace, packet) > 0 && total_packets < (limit+unknown_packets) ) {
     process_packet(packet);
 	if (stop) break;
   }
