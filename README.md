@@ -1,4 +1,4 @@
-# libprotoident Reader
+# ReaDPI: libprotoident packet reader
 Proof-of-Concept PCAP reader using libprotoident Deep Packet Inspection library
 
 
